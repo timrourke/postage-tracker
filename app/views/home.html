@@ -1,0 +1,91 @@
+<section class="transactions">
+	<h1>Postage Transactions</h1>
+
+	<form>
+	Filter: <input type="text" ng-model="transactionFilter[selectedFilter]" ng-init="transactionFilter = {}; selectedFilter='amount'">
+		<fieldset>
+			<input type="radio" ng-model="selectedFilter" value="jobNumber" >Job Number
+			<input type="radio" ng-model="selectedFilter" value="description" >Description
+			<input type="radio" ng-model="selectedFilter" value="amount">Amount
+			<input type="checkbox" ng-model="salesRepCheckboxtom" ng-true-value="'TMS'" ng-false-value="" ng-checked="true" ng-init="salesRepCheckboxtom='TMS'">Show Tom
+			<input type="checkbox" ng-model="salesRepCheckboxbob" ng-true-value="'RMW'" ng-false-value="" ng-checked="true" ng-init="salesRepCheckboxbob='RMW'">Show Bob
+			<button type="button" ng-click="resetFilter()">Clear filters</button>
+		</fieldset>
+
+		<span ng-if="transactionFilter.length">Active filters:</span>
+		<ul>
+			<li ng-repeat="(key, val) in transactionFilter" ng-if="val">{{key}}: {{val}}</li>
+		</ul>
+	</form>
+
+	
+	<div>
+		<label for="dateFrom">Showing transactions from:
+			<input ng-model="dateFrom" name="dateFrom" type="date" ng-init="dateFrom = lastyear.value"/>
+		</label>
+
+		<label for="dateTo"> ...to:
+			<input ng-model="dateTo" name="dateTo" type="date" ng-init="dateTo = thisyear.value"/>	
+		</label>
+	</div>
+	
+
+	<table class="transactions__table">
+		<thead>
+			<tr>
+				<th></th>
+				<th ng-class="sortBy == 'date' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 		ng-click="doSort('date')">Date</th>
+				<th ng-class="sortBy == 'jobNumber' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('jobNumber')">Job Number</th>
+				<th ng-class="sortBy == 'description' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''"  ng-click="doSort('description')">Description</th>
+				<th ng-class="sortBy == 'salesRep' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('salesRep')">Rep</th>
+				<th ng-class="sortBy == 'numPieces' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('numPieces')">No. of pieces</th>
+				<th ng-class="sortBy == 'amount' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 		ng-click="doSort('amount')">Amount</th>
+			</tr>	
+		</thead>
+		<tbody>
+			<tr ng-repeat="transaction in transactions | filter:transactionFilter | salesRepFilter:salesRepCheckboxtom:salesRepCheckboxbob |  dateRangeFilter:dateFrom:dateTo | orderBy:sortBy:reverse" >
+				<td><button type="button" ng-click="setEditedTransaction(transaction);">Edit</button></td>
+				<td>{{transaction.date | date:"MM/dd/yyyy"}}</td>
+				<td>{{transaction.jobNumber}}</td>
+				<td>{{transaction.description}}</td>
+				<td>{{transaction.salesRep}}</td>
+				<td>{{transaction.numPieces}}</td>
+				<td class="transactions__table-amount">{{transaction.amount | currency}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<button type="button" ng-show="!isCreating" ng-click="isCreating = !isCreating;">New Transaction</button>
+
+	<form ng-show="isEditing" ng-submit="edit(editedTransaction)">
+		<h2>Edit</h2>
+		<input type="date" ng-model="editedTransaction.date">
+		<input type="number" ng-model="editedTransaction.jobNumber">
+		<input type="text" ng-model="editedTransaction.description">
+		<select ng-model="editedTransaction.salesRep">
+			<option value="" disabled selected>Rep</option>
+			<option value="TMS">Tom</option>
+			<option value="RMW">Bob</option>
+		</select>
+		<input type="number" ng-model="editedTransaction.numPieces">
+		<input type="number" step="0.01" ng-model="editedTransaction.amount">
+		<button type="submit">Update</button>
+		<button type="button" ng-click="resetEditTransactionForm()">Cancel</button>
+	</form>
+
+	<form ng-show="isCreating" ng-submit="add(newTransaction)">
+		<h2>New Postage Transaction</h2>
+		<input type="date" ng-model="newTransaction.date" ng-init="newTransaction.date = thisyear.value">
+		<input type="number" min="0" ng-model="newTransaction.jobNumber" placeholder="Job Number">
+		<input type="text" ng-model="newTransaction.description" placeholder="Description">
+		<select ng-model="newTransaction.salesRep">
+			<option value="" disabled selected>Rep</option>
+			<option value="TMS">Tom</option>
+			<option value="RMW">Bob</option>
+		</select>
+		<input type="number" ng-model="newTransaction.numPieces" placeholder="No. of pieces">
+		<input type="number" step="0.01" ng-model="newTransaction.amount" placeholder="Amount in USD">
+		<button type="submit">Create</button>
+		<button type="button" ng-click="resetNewTransactionForm()">Cancel</button>
+	</form>
+</section>
