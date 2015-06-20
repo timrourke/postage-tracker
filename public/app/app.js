@@ -64,52 +64,64 @@ app.controller('transactionsController', ['$scope', '$http', '$filter', 'transac
 	}
 	init();
 
+
+	/*	--------------------------------------------------------------
+	 *  FILTERS AND VIEW STATE
+	 *	--------------------------------------------------------------*/
+
+
+	//	DATES 	--------------------------------------------------------------
 	$scope.datevalue = {
 		value: new Date()
-	};
+	}
 
 	$scope.thisyear = {
 		value: new Date()
-	};
+	}
 
 	$scope.lastyear = {
 		value: new Date($scope.datevalue.value.setMonth($scope.datevalue.value.getMonth() - 12))
-	};
+	}
 
 	$scope.formatDate = function(date) {
 		return new Date(date);
 	}
-	
+
+
+	//	SORTING	--------------------------------------------------------------
 	$scope.sortBy = 'date';
+
 	$scope.reverse = false;
 
 	$scope.doSort = function(propName) {
 		$scope.sortBy = propName;
 		$scope.reverse = !$scope.reverse;
-	};
-
-	//	Add transactions
-
-	function resetNewTransactionForm() {
-		$scope.newTransaction = {};
-		$scope.newTransaction.date = new Date();
-		$scope.isCreating = false;
 	}
 
-	function resetEditTransactionForm() {
-		$scope.editedTransaction = null;
-		$scope.isEditing = false;
-	}
 
+	//	VIEW STATE -----------------------------------------------------------
 	function resetFilter() {
 		$scope.transactionFilter = "";
 	}
+	$scope.resetFilter = resetFilter;
 
+	$scope.isEditing = false;
+
+	$scope.isCreating = false;
+
+	$scope.editedTransaction = null;
+
+
+	/*	--------------------------------------------------------------
+	 *  CRUD FUNCTIONS
+	 *	--------------------------------------------------------------*/
+
+
+	//	POST 	--------------------------------------------------------------
 	function addTransaction(newTransaction) {
 		transactionsFactory.postTransaction(newTransaction)
 			.success(
 				function(transaction) {
-					console.log(transaction);
 					$scope.transactions.push(transaction);			
 				}
 			)
@@ -118,51 +130,22 @@ app.controller('transactionsController', ['$scope', '$http', '$filter', 'transac
 					$scope.status = 'Unable to add new transaction: ' + error.message;
 				}
 			)
-		
+
 		resetNewTransactionForm();
 		$scope.isCreating = false;
 	}
-
-	function deleteTransaction(deletedTransaction) {
-		if (confirm('Are you sure you want to delete this transaction?')) {
-
-			transactionsFactory.deleteTransaction(deletedTransaction)
-			.success(
-				function() {
-					var index = _.findIndex($scope.transactions, function(transaction) {
-						return transaction._id == deletedTransaction._id;
-					});
-					$scope.transactions.splice(index, 1)	
-				}
-			)
-			.error(
-				function(error) {
-					$scope.status = 'Unable to delete transaction: ' + error.message;
-				}
-			)
-
-		}
-	}
-
-	$scope.delete = deleteTransaction;
 	$scope.add = addTransaction;
+
+	function resetNewTransactionForm() {
+		$scope.newTransaction = {};
+		$scope.newTransaction.date = new Date();
+		$scope.isCreating = false;
+	}
 	$scope.resetNewTransactionForm = resetNewTransactionForm;
-	$scope.resetEditTransactionForm = resetEditTransactionForm;
-	$scope.resetFilter = resetFilter;
 
-	//	Edit transactions
 
-	$scope.isEditing = false;
-	$scope.isCreating = false;
-
-	$scope.editedTransaction = null;
-	
-	$scope.setEditedTransaction = function(transaction) {
-		$scope.isEditing = !$scope.isEditing;
-		$scope.editedTransaction = angular.copy(transaction);
-	};
-
-	$scope.edit = function(editedTransaction) {
+	//	PUT 	--------------------------------------------------------------
+	function editTransaction(editedTransaction) {
 		transactionsFactory.putTransaction(editedTransaction)
 			.success(
 				function(transaction) {
@@ -178,12 +161,44 @@ app.controller('transactionsController', ['$scope', '$http', '$filter', 'transac
 					$scope.status = 'Unable to add new transaction: ' + error.message;
 				}
 			)
-			
-		
 
 		$scope.isEditing = false;
 		$scope.editedTransaction = null;
-	};
+	}
+	$scope.edit = editTransaction;
+
+	$scope.setEditedTransaction = function(transaction) {
+		$scope.isEditing = !$scope.isEditing;
+		$scope.editedTransaction = angular.copy(transaction);
+	}
+
+	function resetEditTransactionForm() {
+		$scope.editedTransaction = null;
+		$scope.isEditing = false;
+	}
+	$scope.resetEditTransactionForm = resetEditTransactionForm;
+	
+
+	//	DELETE	--------------------------------------------------------------
+	function deleteTransaction(deletedTransaction) {
+		if (confirm('Are you sure you want to delete this transaction?')) {
+			transactionsFactory.deleteTransaction(deletedTransaction)
+			.success(
+				function() {
+					var index = _.findIndex($scope.transactions, function(transaction) {
+						return transaction._id == deletedTransaction._id;
+					});
+					$scope.transactions.splice(index, 1)	
+				}
+			)
+			.error(
+				function(error) {
+					$scope.status = 'Unable to delete transaction: ' + error.message;
+				}
+			)
+		}
+	}
+	$scope.delete = deleteTransaction;
 
 }]);
 
