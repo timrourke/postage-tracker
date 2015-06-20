@@ -1,0 +1,27 @@
+{
+  "name": "postagetracker",
+  "version": "0.0.1",
+  "description": "An AngularJS bookkeeping tool for tracking USPS CAPS account transactions",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timrourke/postage-tracker.git"
+  },
+  "author": "Tim Rourke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/timrourke/postage-tracker/issues"
+  },
+  "homepage": "https://github.com/timrourke/postage-tracker#readme",
+  "dependencies": {
+    "body-parser": "^1.13.1",
+    "express": "^4.12.4",
+    "method-override": "^2.3.3",
+    "mongoose": "^4.0.5",
+    "morgan": "^1.6.0",
+    "serve-favicon": "^2.3.0"
+  }
+}
