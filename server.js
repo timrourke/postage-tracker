@@ -5,6 +5,7 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var mongoose	   = require('mongoose');
 var favicon 	   = require('serve-favicon');
+var ejs 		   = require('ejs');
 var app            = express();
 
 mongoose.connect('mongodb://localhost/postagetracker');
@@ -23,6 +24,9 @@ var api = require('./routes/api');
 
 // config index route to load angular view on all browser requests for page
 var index = require('./routes/index');
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/public');
 
 app.use(morgan('dev'));                     // log every request to the console
 app.use(bodyParser.urlencoded({ extended: false }))    // parse application/x-www-form-urlencoded

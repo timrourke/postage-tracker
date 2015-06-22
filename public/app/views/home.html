@@ -1,20 +1,43 @@
 <section class="transactions">
 	<h1>Postage Transactions</h1>
 
-	<form>
-	Filter: <input type="text" ng-model="transactionFilter[selectedFilter]" ng-init="transactionFilter = {}; selectedFilter='amount'">
-		<fieldset>
-			<input type="radio" ng-model="selectedFilter" value="jobNumber" >Job Number
-			<input type="radio" ng-model="selectedFilter" value="description" >Description
-			<input type="radio" ng-model="selectedFilter" value="amount">Amount
-			<input type="checkbox" ng-model="salesRepCheckboxtom" ng-true-value="'TMS'" ng-false-value="" ng-checked="true" ng-init="salesRepCheckboxtom='TMS'">Show Tom
-			<input type="checkbox" ng-model="salesRepCheckboxbob" ng-true-value="'RMW'" ng-false-value="" ng-checked="true" ng-init="salesRepCheckboxbob='RMW'">Show Bob
+	<form class="transactionFilter__form" name="transactionFilter__form">
+		<label for="transactionFilter__input" class="transactionFilter__input">Filter:
+			<input type="text" name="transactionFilter__input" id="transactionFilter__input" ng-model="transactionFilter[selectedFilter]" ng-init="transactionFilter = {}; selectedFilter='amount'">
+		</label>
+		<fieldset class="transactionFilter__fieldset">
+
+			<label for="transactionFilter__jobNumber" class="control radio">Job Number
+				<input type="radio" ng-model="selectedFilter" name="transactionFilter__jobNumber" id="transactionFilter__jobNumber" value="jobNumber" >
+				<span class="control-indicator"></span>
+			</label>
+			
+			<label for="transactionFilter__description" class="control radio">Description
+				<input type="radio" ng-model="selectedFilter" name="transactionFilter__description" id="transactionFilter__description" value="description" >
+				<span class="control-indicator"></span>
+			</label>
+			
+			<label for="transactionFilter__amount" class="control radio">Amount
+				<input type="radio" ng-model="selectedFilter" name="transactionFilter__amount" id="transactionFilter__amount" value="amount">
+				<span class="control-indicator"></span>
+			</label>
+			
+			<label for="salesRepCheckboxtom" class="control checkbox">Tom
+				<input type="checkbox" name="salesRepCheckboxtom" id="salesRepCheckboxtom" ng-model="salesRepCheckboxtom" ng-true-value="'TMS'" ng-false-value="" ng-checked="true" ng-init="salesRepCheckboxtom='TMS'">
+				<span class="control-indicator"></span>
+			</label>
+			
+			<label for="salesRepCheckboxbob" class="control checkbox">Bob
+				<input type="checkbox" name="salesRepCheckboxbob" id="salesRepCheckboxbob" ng-model="salesRepCheckboxbob" ng-true-value="'RMW'" ng-false-value="" ng-checked="true" ng-init="salesRepCheckboxbob='RMW'">
+				<span class="control-indicator"></span>
+			</label>
+			
 			<button type="button" ng-click="resetFilter()">Clear filters</button>
 		</fieldset>
 
 		<span ng-if="transactionFilter.length">Active filters:</span>
 		<ul>
-			<li ng-repeat="(key, val) in transactionFilter" ng-if="val">{{key}}: {{val}}</li>
+			<li ng-repeat="(key, val) in transactionFilter" ng-if="val">{{key | camelCaseToHuman}}: {{val}}</li>
 		</ul>
 	</form>
 
@@ -33,20 +56,28 @@
 	<table class="transactions__table">
 		<thead>
 			<tr>
-				<th></th>
-				<th ng-class="sortBy == 'date' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 		ng-click="doSort('date')">Date</th>
-				<th ng-class="sortBy == 'jobNumber' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('jobNumber')">Job Number</th>
-				<th ng-class="sortBy == 'description' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''"  ng-click="doSort('description')">Description</th>
-				<th ng-class="sortBy == 'salesRep' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('salesRep')">Rep</th>
-				<th ng-class="sortBy == 'numPieces' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('numPieces')">No. of pieces</th>
-				<th ng-class="sortBy == 'amount' ? (reverse ? 'transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 		ng-click="doSort('amount')">Amount</th>
+				<th class="first-column"></th>
+				<th ng-class="sortBy == 'date' ? (reverse ? 'transactions__table-sorted transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 		ng-click="doSort('date')">Date</th>
+				<th ng-class="sortBy == 'jobNumber' ? (reverse ? 'transactions__table-sorted transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('jobNumber')">Job Number</th>
+				<th ng-class="sortBy == 'description' ? (reverse ? 'transactions__table-sorted transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''"  ng-click="doSort('description')">Description</th>
+				<th ng-class="sortBy == 'salesRep' ? (reverse ? 'transactions__table-sorted transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('salesRep')">Rep</th>
+				<th ng-class="sortBy == 'numPieces' ? (reverse ? 'transactions__table-sorted transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 	ng-click="doSort('numPieces')">No. of pieces</th>
+				<th ng-class="sortBy == 'amount' ? (reverse ? 'transactions__table-sorted transactions__table-sorted--reverse' : 'transactions__table-sorted') : ''" 		ng-click="doSort('amount')">Amount</th>
 			</tr>	
 		</thead>
 		<tbody>
 			<tr ng-repeat="transaction in transactions | filter:transactionFilter | salesRepFilter:salesRepCheckboxtom:salesRepCheckboxbob |  dateRangeFilter:dateFrom:dateTo | orderBy:sortBy:reverse" >
-				<td>
-					<button type="button" ng-click="setEditedTransaction(transaction);">Edit</button>
-					<button type="button" ng-click="delete(transaction);">Delete</button></td>
+				<td class="first-column">
+					<button class="button--icon button--edit" type="button" ng-click="setEditedTransaction(transaction);">
+						<svg viewBox="0 0 100 100">
+							<use xlink:href="#edit"></use>
+						</svg>
+					</button>
+					<button class="button--icon button--delete" type="button" ng-click="delete(transaction);">
+						<svg viewBox="0 0 100 100">
+							<use xlink:href="#delete"></use>
+						</svg>
+					</button></td>
 				<td>{{formatDate(transaction.date) | date: "MM/dd/yyyy"}}</td>
 				<td>{{transaction.jobNumber}}</td>
 				<td>{{transaction.description}}</td>
@@ -57,37 +88,95 @@
 		</tbody>
 	</table>
 
-	<button type="button" ng-show="!isCreating" ng-click="isCreating = !isCreating;">New Transaction</button>
+	<button class="button--submit transactions__newButton" type="button" ng-show="!isCreating" ng-click="isCreating = !isCreating;">New</button>
 
-	<form ng-show="isEditing" ng-submit="edit(editedTransaction)">
-		<h2>Edit</h2>
-		<input type="date" ng-model="editedTransaction.date" required>
-		<input type="number" ng-model="editedTransaction.jobNumber">
-		<input type="text" ng-model="editedTransaction.description">
-		<select ng-model="editedTransaction.salesRep">
-			<option value="" disabled selected>Rep</option>
-			<option value="TMS">Tom</option>
-			<option value="RMW">Bob</option>
-		</select>
-		<input type="number" ng-model="editedTransaction.numPieces">
-		<input type="number" step="0.01" ng-model="editedTransaction.amount" required>
+	<form name="transactionFormEditing" class="transaction__form transaction__form--editing" ng-show="isEditing" ng-submit="edit(editedTransaction)">
+		<h4>Edit</h4>
+
+		<span class="formField">
+			<input type="date" name="editedTransactionDate" ng-model="editedTransaction.date" required>
+			<div class="formValidationError" ng-if="transactionFormEditing.editedTransactionDate.$error.date && transactionFormEditing.editedTransactionDate.$dirty">
+				<div ng-if="transactionFormEditing.editedTransactionDate.$error.date || transactionFormEditing.editedTransactionDate.$error.required">Must be a valid date.</div>
+			</div>
+		</span>
+			
+		<span class="formField">
+			<input type="number" min="0" name="editedTransactionJobNumber" ng-model="editedTransaction.jobNumber" placeholder="Job Number">
+			<div class="formValidationError" ng-if="transactionFormEditing.editedTransactionJobNumber.$error.number && transactionFormEditing.editedTransactionJobNumber.$dirty">
+				<div ng-if="transactionFormEditing.editedTransactionJobNumber.$error.number">Must be a number.</div>
+			</div>
+		</span>
+				
+		<input type="text" ng-model="editedTransaction.description" placeholder="Description">
+		
+		<div class="select">
+			<select ng-model="editedTransaction.salesRep">
+				<option value="" disabled selected>Rep</option>
+				<option value="TMS">Tom</option>
+				<option value="RMW">Bob</option>
+			</select>
+		</div>
+
+		<span class="formField">
+			<input type="number" name="editedTransactionNumberPieces" ng-model="editedTransaction.numPieces" placeholder="No. of pieces">
+			<div class="formValidationError" ng-if="transactionFormEditing.editedTransactionNumberPieces.$error.number && transactionFormEditing.editedTransactionNumberPieces.$dirty">
+				<div ng-if="transactionFormEditing.editedTransactionNumberPieces.$error.number">Must be a number.</div>
+			</div>	
+		</span>
+		
+		<span class="formField">
+			<input type="number" step="0.01" name="editedTransactionAmount" ng-model="editedTransaction.amount" placeholder="Amount in USD" required>
+			<div class="formValidationError" ng-if="transactionFormEditing.editedTransactionAmount.$touched">
+				<div ng-if="transactionFormEditing.editedTransactionAmount.$error.required">An amount is required.</div>
+			</div>
+		</span>
+
 		<button type="submit">Update</button>
 		<button type="button" ng-click="resetEditTransactionForm()">Cancel</button>
 	</form>
 
-	<form ng-show="isCreating" ng-submit="add(newTransaction)">
-		<h2>New Postage Transaction</h2>
-		<input type="date" ng-model="newTransaction.date" ng-init="newTransaction.date = thisyear.value" required>
-		<input type="number" min="0" ng-model="newTransaction.jobNumber" placeholder="Job Number">
+	<form name="transactionFormCreating" class="transaction__form transaction__form--creating" ng-show="isCreating" ng-submit="add(newTransaction)">
+		<h4>New</h4>
+		<span class="formField">
+			<input type="date" name="newTransactionDate" ng-model="newTransaction.date" ng-init="newTransaction.date = thisyear.value" required>
+			<div class="formValidationError" ng-if="transactionFormCreating.newTransactionDate.$error.date && transactionFormCreating.newTransactionDate.$dirty">
+				<div ng-if="transactionFormCreating.newTransactionDate.$error.date || transactionFormCreating.newTransactionDate.$error.required">Must be a valid date.</div>
+			</div>
+		</span>
+			
+		<span class="formField">
+			<input type="number" min="0" name="newTransactionJobNumber" ng-model="newTransaction.jobNumber" placeholder="Job Number">
+			<div class="formValidationError" ng-if="transactionFormCreating.newTransactionJobNumber.$error.number && transactionFormCreating.newTransactionJobNumber.$dirty">
+				<div ng-if="transactionFormCreating.newTransactionJobNumber.$error.number">Must be a number.</div>
+			</div>
+		</span>
+				
 		<input type="text" ng-model="newTransaction.description" placeholder="Description">
-		<select ng-model="newTransaction.salesRep">
-			<option value="" disabled selected>Rep</option>
-			<option value="TMS">Tom</option>
-			<option value="RMW">Bob</option>
-		</select>
-		<input type="number" ng-model="newTransaction.numPieces" placeholder="No. of pieces">
-		<input type="number" step="0.01" ng-model="newTransaction.amount" placeholder="Amount in USD" required>
-		<button type="submit">Create</button>
+		
+		<div class="select">
+			<select ng-model="newTransaction.salesRep">
+				<option value="" disabled selected>Rep</option>
+				<option value="TMS">Tom</option>
+				<option value="RMW">Bob</option>
+			</select>
+		</div>
+
+		<span class="formField">
+			<input type="number" name="newTransactionNumberPieces" ng-model="newTransaction.numPieces" placeholder="No. of pieces">
+			<div class="formValidationError" ng-if="transactionFormCreating.newTransactionNumberPieces.$error.number && transactionFormCreating.newTransactionNumberPieces.$dirty">
+				<div ng-if="transactionFormCreating.newTransactionNumberPieces.$error.number">Must be a number.</div>
+			</div>	
+		</span>
+		
+		<span class="formField">
+			<input type="number" step="0.01" name="newTransactionAmount" ng-model="newTransaction.amount" placeholder="Amount in USD" required>
+			<div class="formValidationError" ng-if="transactionFormCreating.newTransactionAmount.$touched">
+				<div ng-if="transactionFormCreating.newTransactionAmount.$error.required">An amount is required.</div>
+			</div>
+		</span>
+		
+		<button class="button--submit" type="submit">Create</button>
 		<button type="button" ng-click="resetNewTransactionForm()">Cancel</button>
 	</form>
+
 </section>

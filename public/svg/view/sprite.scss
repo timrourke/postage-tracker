@@ -1,0 +1,24 @@
+%svg-common {
+	background: url(svg/sprite.view.svg) no-repeat;
+}
+
+.svg-delete {
+	@extend %svg-common;
+	background-position: 0 0;
+}
+
+.svg-delete-dims {
+	width: 48px;
+	height: 48px;
+}
+
+.svg-edit {
+	@extend %svg-common;
+	background-position: 100% 0;
+}
+
+.svg-edit-dims {
+	width: 48px;
+	height: 48px;
+}
+

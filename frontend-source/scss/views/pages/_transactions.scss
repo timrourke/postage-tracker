@@ -1,0 +1,80 @@
+.transactions {
+	padding:1em;
+}
+.transactionFilter__form {
+	@extend .clearfix;
+}
+.transactionFilter__input {
+	margin-top:0.5em;
+	float:left;
+}
+.transactionFilter__fieldset {
+	padding:0.5em;
+	float:right;
+	button {
+		margin:0;
+	}
+}
+.transactions__table {
+	border:1px solid #ccc;
+	width:100%;
+	border-collapse:collapse;
+	font-size:0.8em;
+}
+.transactions__table th {
+	font-family:$sans-serif;
+	background-color:#e5ffff;
+	padding:0.5em;
+}
+.transactions__table th:hover {
+	cursor:pointer;
+}
+.transactions__table td {
+	padding: 0 0.5em;
+}
+.transactions__table td,
+.transactions__table th {
+	text-align:left;
+}
+.transactions__table tr:nth-child(2n) {
+	background-color:#f7f7f7;
+}
+.transactions__table .first-column {
+	padding-left:0;
+	padding-right:0;
+	width:u(3.125rem);
+}
+.transactions__table .transactions__table-amount {
+	text-align:right;
+}
+.transactions__table-sorted,
+.transactions__table-sorted--reverse {
+	position:relative;
+	color:$lightblue;
+}
+.transactions__table-sorted::after {
+	content:'';
+	position:absolute;
+	display:block;
+	top:0.925em;
+	right:0.5em;
+	border-bottom:0.5em solid $lightblue;
+	border-left:0.325em solid transparent;
+	border-right:0.325em solid transparent;
+	transition:transform 0.3s ease;
+}
+.transactions__table-sorted.transactions__table-sorted--reverse::after {
+	transform:rotateZ(180deg);
+}
+.transactions__table .button--icon {
+	float:left;
+}
+.transactions__table .button--edit svg {
+	padding:0 0.25em 0.75em 0.25em;
+}
+.transactions .select select {
+	min-width:u(3rem);
+}
+.transactions__newButton {
+	float:right;
+}
