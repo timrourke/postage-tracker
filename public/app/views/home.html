@@ -1,6 +1,11 @@
 <section class="transactions">
 	<h1>Postage Transactions</h1>
 
+	<form class="bankBalance__form" name="bankBalance__form" ng-submit="setBankBalance(balance)">
+		<input type="number" ng-model="balance.balance">
+		<button type="submit">Set Balance</button>
+	</form>
+
 	<form class="transactionFilter__form" name="transactionFilter__form">
 		<label for="transactionFilter__input" class="transactionFilter__input">Filter:
 			<input type="text" name="transactionFilter__input" id="transactionFilter__input" ng-model="transactionFilter[selectedFilter]" ng-init="transactionFilter = {}; selectedFilter='amount'">
@@ -35,10 +40,12 @@
 			<button type="button" ng-click="resetFilter()">Clear filters</button>
 		</fieldset>
 
-		<span ng-if="transactionFilter.length">Active filters:</span>
-		<ul>
-			<li ng-repeat="(key, val) in transactionFilter" ng-if="val">{{key | camelCaseToHuman}}: {{val}}</li>
-		</ul>
+		<div class="transactionFilter__active">
+			<span  ng-if="transactionFilter.length">Active filters:</span>
+			<ul>
+				<li class="transactionFilter__active-item" ng-repeat="(key, val) in transactionFilter" ng-if="val">{{key | camelCaseToHuman}}: {{val}}</li>
+			</ul>
+		</div>	
 	</form>
 
 	
@@ -66,7 +73,7 @@
 			</tr>	
 		</thead>
 		<tbody>
-			<tr ng-repeat="transaction in transactions | filter:transactionFilter | salesRepFilter:salesRepCheckboxtom:salesRepCheckboxbob |  dateRangeFilter:dateFrom:dateTo | orderBy:sortBy:reverse" >
+			<tr ng-repeat="transaction in transactions | filter:transactionFilter | salesRepFilter:salesRepCheckboxtom:salesRepCheckboxbob |  dateRangeFilter:dateFrom:dateTo | orderBy:sortBy:reverse track by $index" ng-class="{'transaction--selected': transaction.isSelected}">
 				<td class="first-column">
 					<button class="button--icon button--edit" type="button" ng-click="setEditedTransaction(transaction);">
 						<svg viewBox="0 0 100 100">
@@ -82,15 +89,15 @@
 				<td>{{transaction.jobNumber}}</td>
 				<td>{{transaction.description}}</td>
 				<td>{{transaction.salesRep}}</td>
-				<td>{{transaction.numPieces}}</td>
+				<td class="transactions__table-numPieces">{{transaction.numPieces | number}}</td>
 				<td class="transactions__table-amount">{{transaction.amount | currency}}</td>
 			</tr>
 		</tbody>
 	</table>
 
-	<button class="button--submit transactions__newButton" type="button" ng-show="!isCreating" ng-click="isCreating = !isCreating;">New</button>
+	<button class="button--submit transactions__newButton" type="button" ng-show="isCreating == false && isEditing == false" ng-click="setNewTransaction()">New</button>
 
-	<form name="transactionFormEditing" class="transaction__form transaction__form--editing" ng-show="isEditing" ng-submit="edit(editedTransaction)">
+	<form name="transactionFormEditing" class="transaction__form transaction__form--editing" ng-show="isEditing && !isCreating" ng-submit="edit(editedTransaction)">
 		<h4>Edit</h4>
 
 		<span class="formField">
@@ -132,10 +139,10 @@
 		</span>
 
 		<button type="submit">Update</button>
-		<button type="button" ng-click="resetEditTransactionForm()">Cancel</button>
+		<button type="button" ng-click="resetAllTransactionForms()">Cancel</button>
 	</form>
 
-	<form name="transactionFormCreating" class="transaction__form transaction__form--creating" ng-show="isCreating" ng-submit="add(newTransaction)">
+	<form name="transactionFormCreating" class="transaction__form transaction__form--creating" ng-show="isCreating && !isEditing" ng-submit="add(newTransaction)">
 		<h4>New</h4>
 		<span class="formField">
 			<input type="date" name="newTransactionDate" ng-model="newTransaction.date" ng-init="newTransaction.date = thisyear.value" required>
@@ -176,7 +183,9 @@
 		</span>
 		
 		<button class="button--submit" type="submit">Create</button>
-		<button type="button" ng-click="resetNewTransactionForm()">Cancel</button>
+		<button type="button" ng-click="resetAllTransactionForms()">Cancel</button>
 	</form>
+
+	<button type="button" ng-click="console.log($scope)">ssdfhdfshh</button>
 
 </section>

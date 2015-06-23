@@ -20,7 +20,8 @@ db.once('open', function() {
 });
 
 // config api routes
-var api = require('./routes/api');
+var transactions = require('./routes/api/transactions');
+var bankbalance = require('./routes/api/bankbalance');
 
 // config index route to load angular view on all browser requests for page
 var index = require('./routes/index');
@@ -43,8 +44,8 @@ app.use(methodOverride(function(req, res){ // simulate DELETE and PUT
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(__dirname + '/public'));     // set the static files location /public/img will be /img for users
 
-
-app.use('/api', api);
+app.use('/api/transactions', transactions);
+app.use('/api/bankbalance', bankbalance);
 app.use('/', index);
 
 app.listen(8080);   

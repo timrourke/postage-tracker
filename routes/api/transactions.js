@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-var Transaction = require('./../models/transaction');
+var Transaction = require('./../../models/transaction');
 
-router.get('/transactions', function(req, res) {
+router.get('/', function(req, res) {
 
 	Transaction.find({}).exec(function(err, transactions) {
 
@@ -18,11 +18,11 @@ router.get('/transactions', function(req, res) {
 			res.json(transactions);
 		}
 
-	})
+	});
 
 });
 
-router.post('/transactions', function(req, res) {
+router.post('/', function(req, res) {
 
 	Transaction.create({
 
@@ -45,7 +45,7 @@ router.post('/transactions', function(req, res) {
 
 });
 
-router.get('/transactions/:id', function(req, res) {
+router.get('/:id', function(req, res) {
 
 	console.log(req.params.id);
 
@@ -65,7 +65,7 @@ router.get('/transactions/:id', function(req, res) {
 
 });
 
-router.put('/transactions/:id', function(req, res) {
+router.put('/:id', function(req, res) {
 
 	Transaction.findById(req.params.id).exec(function(err, transaction) {
 		
@@ -92,7 +92,7 @@ router.put('/transactions/:id', function(req, res) {
 
 });
 
-router.delete('/transactions/:id', function(req, res) {
+router.delete('/:id', function(req, res) {
 
 	Transaction.findByIdAndRemove(req.params.id, function(err, transaction) {
 		if (err) {

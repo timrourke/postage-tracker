@@ -3,6 +3,7 @@
 }
 .transactionFilter__form {
 	@extend .clearfix;
+	padding:0 0.5em;
 }
 .transactionFilter__input {
 	margin-top:0.5em;
@@ -14,6 +15,22 @@
 	button {
 		margin:0;
 	}
+}
+.transactionFilter__active {
+	clear:both;
+	width:100%;
+	dispay:block;
+	//padding:0.5em;
+	margin:0;
+}
+.transactionFilter__active-item {
+	float:left;
+	display:block;
+	margin-right:1em;
+	font-size:0.8em;
+	padding:0.5em 0.75em;
+	background-color:white;
+	border-radius:1.25em;
 }
 .transactions__table {
 	border:1px solid #ccc;
@@ -44,7 +61,8 @@
 	padding-right:0;
 	width:u(3.125rem);
 }
-.transactions__table .transactions__table-amount {
+.transactions__table .transactions__table-amount,
+.transactions__table .transactions__table-numPieces {
 	text-align:right;
 }
 .transactions__table-sorted,
@@ -77,4 +95,7 @@
 }
 .transactions__newButton {
 	float:right;
+}
+.transaction--selected {
+	background-color:lighten($green, 25%) !important;
 }
